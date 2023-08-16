@@ -1,0 +1,11 @@
+{
+    "@context": "\/api\/3\/contexts\/WorkflowCollection",
+    "@type": "WorkflowCollection",
+    "name": "02 - Generate Outbreak Alert Records",
+    "description": null,
+    "visible": true,
+    "image": null,
+    "uuid": "8eb9402f-8395-4997-9469-f8897ff8ac2a",
+    "deletedAt": null,
+    "recordTags": []
+}

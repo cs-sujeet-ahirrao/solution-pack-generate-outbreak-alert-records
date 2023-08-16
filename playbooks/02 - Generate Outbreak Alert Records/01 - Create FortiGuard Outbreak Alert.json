@@ -1,0 +1,231 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "01 - Create FortiGuard Outbreak Alert",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create the FortiGuard outbreak alert json and create the FortiGuard outbreak alert in FortiSOAR",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/8eb9402f-8395-4997-9469-f8897ff8ac2a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/945e5687-9061-49cc-907c-f863b1d613f6",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Configuration",
+            "description": null,
+            "arguments": {
+                "source_data": "{{vars.steps.Read_Outbreak_Alert_JSON_File.data['extracted_text'] | from_json}}"
+            },
+            "status": null,
+            "top": "300",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "86ef242a-c500-478f-8796-49c14e56e869"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Outbreak Alert",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "title": "{{vars.source_data[0].title}}",
+                    "status": "{{vars.source_data[0].status}}",
+                    "cVEList": "{{vars.source_data[0].cve_list}}",
+                    "severity": "{{\"Outbreak Alert Severity\" | picklist(vars.source_data[0].severity, \"@id\")}}",
+                    "subTitle": "{{vars.source_data[0].sub_title}}",
+                    "__replace": "",
+                    "background": "{{vars.source_data[0].background}}",
+                    "iOCCSVFile": "{{vars.input.params.uploadIOCCSVFile['@id']}}",
+                    "recordTags": "{{\"Outbreak Alert\"}},{{vars.source_data[0].tag}}",
+                    "sourceData": "{{vars.source_data}}",
+                    "description": "{{vars.source_data[0].description}}",
+                    "announcement": "{{vars.source_data[0].announced}}",
+                    "threatSignal": "Progress MOVEit Transfer SQL Injection Vulnerability",
+                    "communityLink": "{{vars.source_data[0].link}}",
+                    "fortiguardURL": "{{vars.source_data[0].outbreak_url}}",
+                    "latestAnnouncement": "{{vars.source_data[0].latest}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/outbreak_alerts",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "435",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "57087dce-720e-4bda-bd05-3e8af8f3edac"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Read Outbreak Alert JSON File",
+            "description": null,
+            "arguments": {
+                "name": "File Content Extraction",
+                "params": {
+                    "file_iri": "{{vars.input.params.uploadFortiGuardOutbreakAlertJSONFile['@id']}}",
+                    "html_output_format": false
+                },
+                "version": "1.1.0",
+                "connector": "file-content-extraction",
+                "operation": "extract_text",
+                "operationTitle": "Extract Text",
+                "pickFromTenant": false,
+                "step_variables": []
+            },
+            "status": null,
+            "top": "165",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/0bfed618-0316-11e7-93ae-92361f002671",
+            "group": null,
+            "uuid": "5d3f03ab-4231-42e6-a0c7-abbd9cc4eb15"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "182a7d99-2b36-4879-b1d3-fa38080d0cc5",
+                "resources": [
+                    "outbreak_alerts"
+                ],
+                "inputVariables": [
+                    {
+                        "name": "uploadFortiGuardOutbreakAlertJSONFile",
+                        "type": "string",
+                        "label": "Upload FortiGuard Outbreak Alert JSON File",
+                        "title": "File Field",
+                        "usable": true,
+                        "tooltip": "",
+                        "dataType": "file",
+                        "formType": "file",
+                        "required": true,
+                        "_expanded": true,
+                        "mmdUpdate": true,
+                        "collection": false,
+                        "dataSource": {
+                            "model": "files"
+                        },
+                        "searchable": false,
+                        "templateUrl": "app\/components\/form\/fields\/file.html",
+                        "defaultValue": null,
+                        "_previousName": "uploadFortiGuardOutbreakAlertJSON",
+                        "playbookField": true,
+                        "lengthConstraint": true,
+                        "allowedEncryption": false,
+                        "allowedGridColumn": true,
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false
+                    },
+                    {
+                        "name": "uploadIOCCSVFile",
+                        "type": "string",
+                        "label": "Upload IOC CSV File",
+                        "title": "File Field",
+                        "usable": true,
+                        "tooltip": "",
+                        "dataType": "file",
+                        "formType": "file",
+                        "required": false,
+                        "_expanded": true,
+                        "mmdUpdate": true,
+                        "collection": false,
+                        "dataSource": {
+                            "model": "files"
+                        },
+                        "searchable": false,
+                        "templateUrl": "app\/components\/form\/fields\/file.html",
+                        "defaultValue": null,
+                        "_previousName": "uploadIOCCSV",
+                        "playbookField": true,
+                        "lengthConstraint": true,
+                        "allowedEncryption": false,
+                        "allowedGridColumn": true,
+                        "jinjaExpressionView": true,
+                        "useRecordFieldDefault": false
+                    }
+                ],
+                "step_variables": {
+                    "input": {
+                        "params": {
+                            "uploadIOCCSVFile": "{{vars.request.data[\"uploadIOCCSVFile\"]}}",
+                            "uploadFortiGuardOutbreakAlertJSONFile": "{{vars.request.data[\"uploadFortiGuardOutbreakAlertJSONFile\"]}}"
+                        },
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "_promptexpanded": true,
+                "displayConditions": {
+                    "outbreak_alerts": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Ingest",
+                "noRecordExecution": true,
+                "singleRecordExecution": false
+            },
+            "status": null,
+            "top": "30",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "945e5687-9061-49cc-907c-f863b1d613f6"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Configuration -> Create Outbreak Alert",
+            "targetStep": "\/api\/3\/workflow_steps\/57087dce-720e-4bda-bd05-3e8af8f3edac",
+            "sourceStep": "\/api\/3\/workflow_steps\/86ef242a-c500-478f-8796-49c14e56e869",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "729ce195-02bd-4fff-832c-004b940f567e"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Read Outbreak Alert JSON File -> json",
+            "targetStep": "\/api\/3\/workflow_steps\/86ef242a-c500-478f-8796-49c14e56e869",
+            "sourceStep": "\/api\/3\/workflow_steps\/5d3f03ab-4231-42e6-a0c7-abbd9cc4eb15",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "45d78670-85c3-46cf-862a-a9fc42d24e12"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Read Outbreak Alert JSON File",
+            "targetStep": "\/api\/3\/workflow_steps\/5d3f03ab-4231-42e6-a0c7-abbd9cc4eb15",
+            "sourceStep": "\/api\/3\/workflow_steps\/945e5687-9061-49cc-907c-f863b1d613f6",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "0db97ea1-927c-40cc-9893-60e1893c1269"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "b5701dc6-7d98-45d8-89a4-5b14f1b7fccf",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ManualTrigger",
+        "Outbreak Alert"
+    ]
+}
