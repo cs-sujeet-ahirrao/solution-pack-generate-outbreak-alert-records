@@ -1,0 +1,115 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Fetch Outbreak Alert Details > Create Yara Rule",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create the Yara rule records for the specified outbreak alert",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "rule_details"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/8eb9402f-8395-4997-9469-f8897ff8ac2a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/8590f4cf-cb80-4360-9c77-b76b44cf19a9",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Configuration",
+            "description": null,
+            "arguments": {
+                "title": "{% for item in vars.input.params['rule_details'].data.split(\"\\n\") %}{% if \"description\" in item %}{{(item.split('=')[-1]).strip()}}{% endif %}{% endfor %}"
+            },
+            "status": null,
+            "top": "165",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "34de090d-3c07-4585-a3f8-effa70327147"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Yara Rule",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "rule": "{% for item in vars.input.params['rule_details'].data.split(\"\\n\") %}\n{{item}}\n{% endfor %}",
+                    "title": "{{vars.title}}",
+                    "ruleLink": "{{vars.input.params['rule_details'].url}}",
+                    "ruleType": "\/api\/3\/picklists\/d2bc7e39-adae-4325-a506-e9e7c06f3420",
+                    "__replace": "true",
+                    "recordTags": "{{\"Outbreak Alert\"}},{{vars.input.records[0].recordTags | join(\",\")}}",
+                    "outbreakAlerts": "{{vars.input.records[0]['@id']}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/upsert\/threat_hunt_rules",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "35777827-d4f8-4b0a-8158-f82d0c3b6fa1"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "30",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "8590f4cf-cb80-4360-9c77-b76b44cf19a9"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Configuration -> Create Sigma Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/35777827-d4f8-4b0a-8158-f82d0c3b6fa1",
+            "sourceStep": "\/api\/3\/workflow_steps\/34de090d-3c07-4585-a3f8-effa70327147",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "c52a94a1-6991-43bd-b660-4167086a6ede"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Configuration",
+            "targetStep": "\/api\/3\/workflow_steps\/34de090d-3c07-4585-a3f8-effa70327147",
+            "sourceStep": "\/api\/3\/workflow_steps\/8590f4cf-cb80-4360-9c77-b76b44cf19a9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "7cef7207-4885-4d7d-b923-f3e7a14e4fcb"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "93feb1a5-77fc-494a-9c51-1801bba63e16",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Subroutine",
+        "Outbreak Alert",
+        "Yara Rule"
+    ]
+}

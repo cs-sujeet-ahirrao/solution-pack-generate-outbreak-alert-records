@@ -1,0 +1,127 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Fetch Outbreak Alert Details > Create Sigma Rule",
+    "aliasName": null,
+    "tag": null,
+    "description": "Create the Sigma rule records for the specified outbreak alert",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "rule_details"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/8eb9402f-8395-4997-9469-f8897ff8ac2a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d457618e-e74e-45ab-a333-6d946db86809",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Configuration",
+            "description": null,
+            "arguments": {
+                "title": "{% for item in vars.input.params['rule_details']['rule'] %}{% if \"title\" in item %}{{(item.split(':')[-1]).strip()}}{% endif %}{% endfor %}",
+                "rule_url": "{{vars.input.params['rule_details'].url}}",
+                "sigma_rule": "{{vars.input.params['rule_details']['rule']}}",
+                "QRadar_hunt_query": "{{vars.input.params['rule_details'].QRadar_hunt_query}}",
+                "splunk_hunt_query": "{{vars.input.params['rule_details'].splunk_hunt_query}}",
+                "arcSight_hunt_query": "{{vars.input.params['rule_details'].arcSight_hunt_query}}",
+                "elasticSearch_hunt_query": "{{vars.input.params['rule_details'].elasticSearch_hunt_query}}",
+                "azureLogAnalytics_hunt_query": "{{vars.input.params['rule_details'].azureLogAnalytics_hunt_query}}"
+            },
+            "status": null,
+            "top": "165",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "94aa70d9-68a8-4364-8d82-949bc007d21f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Sigma Rule",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "rule": "{% for item in vars.sigma_rule %}\n{{item}}\n{% endfor %}",
+                    "title": "{{vars.title}}",
+                    "qRadar": "{{vars.QRadar_hunt_query}}",
+                    "splunk": "{{vars.splunk_hunt_query}}",
+                    "arcSight": "{{vars.arcSight_hunt_query}}",
+                    "ruleLink": "{{vars.rule_url}}",
+                    "ruleType": "\/api\/3\/picklists\/fa026fd2-2b2f-45b0-80aa-61eda4f9a007",
+                    "__replace": "true",
+                    "recordTags": "{{\"Outbreak Alert\"}},{{vars.input.records[0].recordTags | join(\",\")}}",
+                    "elasticSearch": "{{vars.elasticSearch_hunt_query}}",
+                    "outbreakAlerts": "{{vars.input.records[0]['@id']}}",
+                    "azureLogAnalytics": "{{vars.azureLogAnalytics_hunt_query}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/upsert\/threat_hunt_rules",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "71f09be4-aaf5-4aa2-99b3-c0abcd74276f"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "30",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "d457618e-e74e-45ab-a333-6d946db86809"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Configuration -> Create Sigma Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/71f09be4-aaf5-4aa2-99b3-c0abcd74276f",
+            "sourceStep": "\/api\/3\/workflow_steps\/94aa70d9-68a8-4364-8d82-949bc007d21f",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "cc3a71b5-d894-4148-b419-7a078991b58b"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Configuration",
+            "targetStep": "\/api\/3\/workflow_steps\/94aa70d9-68a8-4364-8d82-949bc007d21f",
+            "sourceStep": "\/api\/3\/workflow_steps\/d457618e-e74e-45ab-a333-6d946db86809",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "04ba877a-9f55-4506-992e-e0507b5d14e8"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "6193b3b7-c074-458b-84c9-cc1e4ba2e397",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Subroutine",
+        "Outbreak Alert",
+        "Sigma Rule"
+    ]
+}

@@ -1,0 +1,115 @@
+{
+    "name": "generateOutbreakAlertRecords",
+    "version": "1.0.0",
+    "fsrMinCompatibility": "7.2.0",
+    "type": "solutionpack",
+    "local": true,
+    "label": "Generate Outbreak Alert Records",
+    "dependencies": [
+        {
+            "name": "sOARFramework",
+            "type": "solutionpack",
+            "label": "SOAR Framework",
+            "minVersion": null
+        },
+        {
+            "name": "vulnerabilityManagement",
+            "type": "solutionpack",
+            "label": "Vulnerability Management",
+            "minVersion": null
+        },
+        {
+            "name": "threat-intel-management",
+            "type": "solutionpack",
+            "label": "Threat Intel Management",
+            "minVersion": null
+        }
+    ],
+    "prerequisite": null,
+    "publisher": "Fortinet",
+    "description": "\"Generate Outbreak Alert Records\" solution pack creates the \"Outbreak Alert - [Outbreak Alert Name]\" solution pack which works on \"Outbreak Alert Management Framework\"",
+    "help": "https://github.com/fortinet-fortisoar/solution-pack-generate-outbreak-alert-records/blob/release/1.0.0/README.md",
+    "category": [
+        "Vulnerability Management"
+    ],
+    "supportInfo": "Fortinet Customer Support",
+    "iconLarge": null,
+    "postInstallConfig": null,
+    "recordTags": [
+        "Outbreak Alert"
+    ],
+    "date": "2023-08-22T07:03:39+00:00",
+    "contents": {
+        "picklistNames": [
+            {
+                "name": "AlertType"
+            },
+            {
+                "name": "Outbreak Alert Severity"
+            },
+            {
+                "name": "Rule Type"
+            }
+        ],
+        "modules": {
+            "threat_hunt_rules": {
+                "name": "Threat Hunt Rules",
+                "apiName": "threat_hunt_rules"
+            },
+            "outbreak_alerts": {
+                "name": "Outbreak Alerts",
+                "apiName": "outbreak_alerts"
+            }
+        },
+        "viewTemplates": {
+            "alerts": {
+                "name": "Alerts",
+                "apiName": "alerts",
+                "views": [
+                    "detail"
+                ]
+            },
+            "outbreak_alerts": {
+                "name": "Outbreak Alerts",
+                "apiName": "outbreak_alerts",
+                "views": [
+                    "list",
+                    "detail",
+                    "form"
+                ]
+            },
+            "threat_hunt_rules": {
+                "name": "Threat Hunt Rules",
+                "apiName": "threat_hunt_rules",
+                "views": [
+                    "list",
+                    "detail",
+                    "form"
+                ]
+            }
+        },
+        "views": {
+            "navigation": [
+                "Outbreak Alert Management"
+            ]
+        },
+        "roles": [
+            {
+                "name": "Full App Permissions"
+            }
+        ],
+        "playbooks": [
+            {
+                "name": "10 - Internal SP - Generate Outbreak Alert Records"
+            }
+        ],
+        "globalVariables": [],
+        "playbookBlocks": [],
+        "connectors": [
+            {
+                "name": "File Content Extraction",
+                "apiName": "file-content-extraction"
+            }
+        ]
+    }
+}

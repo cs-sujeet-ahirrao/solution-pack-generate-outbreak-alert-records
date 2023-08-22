@@ -1,0 +1,295 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "Fetch Outbreak Alert Details > Download Sigma Rule",
+    "aliasName": null,
+    "tag": null,
+    "description": "Retrieves the sigma rule and create the hunt query for specified outbreak alert",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [
+        "sigma_rule"
+    ],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/8eb9402f-8395-4997-9469-f8897ff8ac2a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/d0e5aaef-ea11-40a8-ae75-efd01986cd74",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Get Log Source Queries for Sigma Rule",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Download Outbreak Alert Sigma Rule",
+                        "description": "{% for item in vars.sigma_rule_title %}\n{% if \"title\" in item %}\n**Tittle:** {{(item.split(':')[-1]).strip()}}\n<br>\n{% endif %}\n{% if \"description\" in item %}\n**Description:** {{(item.split(':')[-1]).strip()}}\n<br>\n{% endif %}\n{% endfor %}\n\n**Steps to Create Hunting Query:**\n1. Open and copy [Outbreak Alert Sigma Rule]({{vars.input.params['sigma_rule']}})\n2. Past the MOVEit Exploitation Sigma Rule into [Uncoder](https:\/\/uncoder.io\/) to generate the log event query for following SIEM platform.\n3. Past the generated log event query into the below text area\n",
+                        "inputVariables": [
+                            {
+                                "name": "qRadar",
+                                "type": "string",
+                                "label": "QRadar",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "qRadar",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedEncryption": true,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            },
+                            {
+                                "name": "splunk",
+                                "type": "string",
+                                "label": "Splunk",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            },
+                            {
+                                "name": "arcSight",
+                                "type": "string",
+                                "label": "ArcSight",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "arcSigh",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            },
+                            {
+                                "name": "elasticSearch",
+                                "type": "string",
+                                "label": "Elastic Search",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "elasticSearch",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            },
+                            {
+                                "name": "azureLogAnalytics",
+                                "type": "string",
+                                "label": "Azure Log Analytics",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": null,
+                                "_previousName": "microsoftSentinel",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            }
+                        ]
+                    }
+                },
+                "record": "{{vars.input.records[0]['@id']}}",
+                "agent_id": null,
+                "resources": "outbreak_alerts",
+                "owner_detail": {
+                    "isAssigned": false
+                },
+                "isRecordLinked": true,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Upload",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/1d0eee6a-6131-4ce1-9e7a-b6a48bacba00"
+                        }
+                    ],
+                    "duplicateOption": false
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false
+            },
+            "status": null,
+            "top": "300",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "f9c9f361-2238-46af-a1ce-569fa60a2763"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Get Sigma Rule",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "url": "{{vars.input.params['sigma_rule']}}",
+                    "body": "",
+                    "method": "GET",
+                    "params": "",
+                    "verify": true,
+                    "headers": "",
+                    "password": "",
+                    "username": "",
+                    "auth_config": ""
+                },
+                "version": "3.2.3",
+                "connector": "cyops_utilities",
+                "operation": "api_call",
+                "operationTitle": "Utils: Make REST API Call",
+                "step_variables": {
+                    "sigma_rule_title": "{{vars.steps.Get_Sigma_Rule.data.split(\"\\n\")}}"
+                }
+            },
+            "status": null,
+            "top": "165",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "8c249a75-04dd-4901-9ce3-eada0d599d5d"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Return Result",
+            "description": null,
+            "arguments": {
+                "sigma_rule": "{{vars.steps.Get_Sigma_Rule.data.split(\"\\n\")}}",
+                "QRadar_hunt_query": "{{vars.steps.Get_Log_Source_Queries_for_Sigma_Rule.input.qRadar}}",
+                "splunk_hunt_query": "{{vars.steps.Get_Log_Source_Queries_for_Sigma_Rule.input.splunk}}",
+                "arcSight_hunt_query": "{{vars.steps.Get_Log_Source_Queries_for_Sigma_Rule.input.arcSight}}",
+                "elasticSearch_hunt_query": "{{vars.steps.Get_Log_Source_Queries_for_Sigma_Rule.input.elasticSearch}}",
+                "azureLogAnalytics_hunt_query": "{{vars.steps.Get_Log_Source_Queries_for_Sigma_Rule.input.azureLogAnalytics}}"
+            },
+            "status": null,
+            "top": "435",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "1d0eee6a-6131-4ce1-9e7a-b6a48bacba00"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "step_variables": {
+                    "input": {
+                        "params": []
+                    }
+                }
+            },
+            "status": null,
+            "top": "30",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+            "group": null,
+            "uuid": "d0e5aaef-ea11-40a8-ae75-efd01986cd74"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Log Source Queries for Sigma Rule -> Return Output",
+            "targetStep": "\/api\/3\/workflow_steps\/1d0eee6a-6131-4ce1-9e7a-b6a48bacba00",
+            "sourceStep": "\/api\/3\/workflow_steps\/f9c9f361-2238-46af-a1ce-569fa60a2763",
+            "label": "Upload",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ef77f195-1eaf-4ed1-a85d-8990d1f6cb29"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Sigma Rule -> Download Sigma Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/f9c9f361-2238-46af-a1ce-569fa60a2763",
+            "sourceStep": "\/api\/3\/workflow_steps\/8c249a75-04dd-4901-9ce3-eada0d599d5d",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "ec6b2229-5665-4f91-b581-fc62efbb3004"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Get Sigma Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/8c249a75-04dd-4901-9ce3-eada0d599d5d",
+            "sourceStep": "\/api\/3\/workflow_steps\/d0e5aaef-ea11-40a8-ae75-efd01986cd74",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "8cb4a9a7-de13-4c54-8e92-e1f4f831ea5c"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "e61b3eff-084f-4cdf-ab9f-c8bbc5598da4",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "Subroutine",
+        "Outbreak Alert",
+        "Hunt Query"
+    ]
+}

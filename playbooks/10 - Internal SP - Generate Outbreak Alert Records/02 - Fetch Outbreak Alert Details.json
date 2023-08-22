@@ -1,0 +1,456 @@
+{
+    "@type": "Workflow",
+    "triggerLimit": null,
+    "name": "02 - Fetch Outbreak Alert Details",
+    "aliasName": null,
+    "tag": null,
+    "description": "Retrieves the associated outbreak alert details",
+    "isActive": true,
+    "debug": false,
+    "singleRecordExecution": false,
+    "remoteExecutableFlag": false,
+    "parameters": [],
+    "synchronous": false,
+    "collection": "\/api\/3\/workflow_collections\/8eb9402f-8395-4997-9469-f8897ff8ac2a",
+    "versions": [],
+    "triggerStep": "\/api\/3\/workflow_steps\/b78a2f95-04de-401a-b6bb-9734d90a6e43",
+    "steps": [
+        {
+            "@type": "WorkflowStep",
+            "name": "Compute Sigma Rules",
+            "description": null,
+            "arguments": {
+                "sigma_rule": "{% set sr = [] %}{% for item in vars.steps.Download_Sigma_Rule %}{% set _ = sr.append({\"rule\": item.sigma_rule, \"splunk_hunt_query\": item.splunk_hunt_query, \"QRadar_hunt_query\": item.QRadar_hunt_query, \"arcSight_hunt_query\": item.arcSight_hunt_query, \"elasticSearch_hunt_query\": item.elasticSearch_hunt_query, \"azureLogAnalytics_hunt_query\": item.azureLogAnalytics_hunt_query, \"url\": vars.sigma_rule_list[loop.index0] }) %}{% endfor %}{{sr}}",
+                "yara_rules": "{% set rl = [] %}{% for item in vars.steps.Get_Yara_Rule %}{% set _ = rl.append({\"data\": item.data, \"url\": vars.yara_rule_list[loop.index0]}) %}{%\n endfor %}{{rl}}"
+            },
+            "status": null,
+            "top": "570",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "68708e2a-1426-41d9-8cbe-6bb5c56ad70e"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Configuration",
+            "description": null,
+            "arguments": {
+                "workflow_tags": "MOVEit",
+                "yara_rule_list": "[\"https:\/\/raw.githubusercontent.com\/huntresslabs\/threat-intel\/main\/2023\/2023-06\/1-MOVEit\/yara\/human2_MOVEit.yar\", \"https:\/\/raw.githubusercontent.com\/Neo23x0\/signature-base\/master\/yara\/vuln_moveit_0day_jun23.yar\"]",
+                "sigma_rule_list": "[\"https:\/\/raw.githubusercontent.com\/SigmaHQ\/sigma\/master\/rules-emerging-threats\/2023\/Exploits\/CVE-2023-34362-MOVEit-Transfer-Exploit\/web_cve_2023_34362_known_payload_request.yml.yml\", \"https:\/\/raw.githubusercontent.com\/tsale\/Sigma_rules\/main\/Threat%20Hunting%20Queries\/MOVEit_exploitation.yml\", \"https:\/\/raw.githubusercontent.com\/SigmaHQ\/sigma\/master\/rules-emerging-threats\/2023\/Exploits\/CVE-2023-34362-MOVEit-Transfer-Exploit\/file_event_win_exploit_cve_2023_34362_moveit_transfer.yml\"]"
+            },
+            "status": null,
+            "top": "165",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+            "group": null,
+            "uuid": "999f24fc-27db-455e-be1b-991d2f5bbcdb"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create FortiAnalyzer Rule",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "title": "{{vars.steps.Get_Fortinet_Fabric_Queries.input.fortiAnalyzer.title}}",
+                    "ruleLink": "{{vars.steps.Get_Fortinet_Fabric_Queries.input.fortiAnalyzer.febric_report_url}}",
+                    "ruleType": "\/api\/3\/picklists\/8188b8c7-6f77-4f28-8b87-11c7ceef84dc",
+                    "__replace": "true",
+                    "recordTags": "{{\"Outbreak Alert\"}},{{vars.input.records[0].recordTags | join(\",\")}}",
+                    "fortiAnalyzer": "{{vars.steps.Get_Fortinet_Fabric_Queries.input.fortiAnalyzer | toJSON}}",
+                    "outbreakAlerts": "{{vars.input.records[0]['@id']}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/upsert\/threat_hunt_rules",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "1245",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "88a1b4b4-506a-410a-9a76-76d3464a36fa"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create FortiSIEM Rule",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "title": "{{vars.steps.Get_Fortinet_Fabric_Queries.input.fortiSIEM.title}}",
+                    "ruleLink": "{{vars.steps.Get_Fortinet_Fabric_Queries.input.fortiSIEM.febric_report_url}}",
+                    "ruleType": "\/api\/3\/picklists\/8188b8c7-6f77-4f28-8b87-11c7ceef84dc",
+                    "__replace": "true",
+                    "fortiSIEM": "{{vars.steps.Get_Fortinet_Fabric_Queries.input.fortiSIEM | toJSON}}",
+                    "recordTags": "{{\"Outbreak Alert\"}},{{vars.input.records[0].recordTags | join(\",\")}}",
+                    "outbreakAlerts": "{{vars.input.records[0]['@id']}}"
+                },
+                "operation": "Overwrite",
+                "collection": "\/api\/3\/upsert\/threat_hunt_rules",
+                "__recommend": [],
+                "fieldOperation": {
+                    "recordTags": "Overwrite"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "1110",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/2597053c-e718-44b4-8394-4d40fe26d357",
+            "group": null,
+            "uuid": "210941fd-d96b-42f5-9ee6-2e67915e47db"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Sigma Rule Record",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.sigma_rule}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "rule_details": "{{vars.item}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": true,
+                "workflowReference": "\/api\/3\/workflows\/6193b3b7-c074-458b-84c9-cc1e4ba2e397"
+            },
+            "status": null,
+            "top": "840",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "ef991765-8e13-41e3-bb3d-611b820041b9"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Create Yara Rule Record",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.yara_rules}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "rule_details": "{{vars.item}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": true,
+                "workflowReference": "\/api\/3\/workflows\/93feb1a5-77fc-494a-9c51-1801bba63e16"
+            },
+            "status": null,
+            "top": "705",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "37e7c751-9959-4e87-8b0f-aa535c61a67a"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Download Sigma Rule",
+            "description": null,
+            "arguments": {
+                "for_each": {
+                    "item": "{{vars.sigma_rule_list}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "arguments": {
+                    "sigma_rule": "{{vars.item}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": true,
+                "workflowReference": "\/api\/3\/workflows\/e61b3eff-084f-4cdf-ab9f-c8bbc5598da4"
+            },
+            "status": null,
+            "top": "435",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+            "group": null,
+            "uuid": "d4ee7fbe-2e77-4646-a4c6-52ea5c687382"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Get Fortinet Fabric Queries",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Get Fortinet Fabric Queries",
+                        "description": "Provide the Fortinet Fabric Queries for threat hunting",
+                        "inputVariables": [
+                            {
+                                "name": "fortiSIEM",
+                                "type": "object",
+                                "label": "FortiSIEM",
+                                "title": "JSON",
+                                "usable": true,
+                                "tooltip": "Provide the rule Event Type and Event Severity Category",
+                                "dataType": "object",
+                                "formType": "object",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": "{\n  \"title\": \"FortiSIEM Content Update | Progress MOVEit Transfer SQL Injection Vulnerability\",\n  \"eventType\": \"PH_RULE_Progress_MOVEit_Transfer_SQL_Injection_CVE_2023_34362_Host\",\n  \"eventSeverityCategory\": \"HIGH\",\n  \"febric_report_url\": \"https:\/\/help.fortinet.com\/fsiem\/6-6-2\/Online-Help\/HTML5_Help\/content_updates.htm#Content14\"\n}",
+                                "_previousName": "forti",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            },
+                            {
+                                "name": "fortiAnalyzer",
+                                "type": "object",
+                                "label": "FortiAnalyzer",
+                                "title": "JSON",
+                                "usable": true,
+                                "tooltip": "Provide the ADOM and event filter details",
+                                "dataType": "object",
+                                "formType": "object",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": true,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": "{\n  \"title\": \"FortiAnalyzer Threat Hunting | Progress MOVEit Transfer SQL Injection Vulnerability\",\n  \"ADOM\": \"root\",\n  \"filter\": \"triggername=\\\"Outbreak Alert - Progress MOVEit Transfer SQL Injection Event-H\\\"\",\n  \"febric_report_url\": \"https:\/\/community.fortinet.com\/t5\/FortiAnalyzer\/Technical-Tip-Using-FortiAnalyzer-to-detect-activities-related\/ta-p\/259336\"\n}",
+                                "_previousName": "fortiAnalyzer",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            }
+                        ]
+                    }
+                },
+                "record": "{{ vars.input.records[0][\"@id\"] }}",
+                "agent_id": null,
+                "resources": "outbreak_alerts",
+                "owner_detail": {
+                    "isAssigned": false
+                },
+                "isRecordLinked": true,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Upload",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/210941fd-d96b-42f5-9ee6-2e67915e47db"
+                        }
+                    ],
+                    "duplicateOption": false
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false
+            },
+            "status": null,
+            "top": "975",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "c374cd76-9f2c-4ffd-be61-1f741cac0687"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Get Yara Rule",
+            "description": null,
+            "arguments": {
+                "params": {
+                    "url": "{{vars.item}}",
+                    "body": "",
+                    "method": "GET",
+                    "params": "",
+                    "verify": true,
+                    "headers": "",
+                    "password": "",
+                    "username": "",
+                    "auth_config": ""
+                },
+                "version": "3.2.3",
+                "for_each": {
+                    "item": "{{vars.yara_rule_list}}",
+                    "parallel": false,
+                    "condition": ""
+                },
+                "connector": "cyops_utilities",
+                "operation": "api_call",
+                "operationTitle": "Utils: Make REST API Call",
+                "step_variables": []
+            },
+            "status": null,
+            "top": "300",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+            "group": null,
+            "uuid": "27cba674-81ef-467c-ae52-9d7fa8e351d7"
+        },
+        {
+            "@type": "WorkflowStep",
+            "name": "Start",
+            "description": null,
+            "arguments": {
+                "route": "888b3cb3-f1c4-4b89-8208-243b68c70406",
+                "resources": [
+                    "outbreak_alerts"
+                ],
+                "inputVariables": [],
+                "step_variables": {
+                    "input": {
+                        "params": [],
+                        "records": "{{vars.input.records}}"
+                    }
+                },
+                "displayConditions": {
+                    "outbreak_alerts": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    },
+                    "threat_hunt_rules": {
+                        "sort": [],
+                        "limit": 30,
+                        "logic": "AND",
+                        "filters": []
+                    }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": false,
+                "singleRecordExecution": true
+            },
+            "status": null,
+            "top": "30",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/f414d039-bb0d-4e59-9c39-a8f1e880b18a",
+            "group": null,
+            "uuid": "b78a2f95-04de-401a-b6bb-9734d90a6e43"
+        }
+    ],
+    "routes": [
+        {
+            "@type": "WorkflowRoute",
+            "name": "Compute Sigma Rules -> Create Yara Rule Record",
+            "targetStep": "\/api\/3\/workflow_steps\/37e7c751-9959-4e87-8b0f-aa535c61a67a",
+            "sourceStep": "\/api\/3\/workflow_steps\/68708e2a-1426-41d9-8cbe-6bb5c56ad70e",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "459c85bb-64ff-44a1-9e43-85957c91a68a"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Configuration -> Get Yara Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/27cba674-81ef-467c-ae52-9d7fa8e351d7",
+            "sourceStep": "\/api\/3\/workflow_steps\/999f24fc-27db-455e-be1b-991d2f5bbcdb",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "9446f7fe-5327-440a-9381-b31daf356acf"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Create FortiSIEM Rule -> Copy of Create FortiSIEM Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/88a1b4b4-506a-410a-9a76-76d3464a36fa",
+            "sourceStep": "\/api\/3\/workflow_steps\/210941fd-d96b-42f5-9ee6-2e67915e47db",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "81657b70-c2e4-4e6b-90a4-6533c3ddfdba"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Create Sigma Rule Record -> Get Fortinet Fabric Queries",
+            "targetStep": "\/api\/3\/workflow_steps\/c374cd76-9f2c-4ffd-be61-1f741cac0687",
+            "sourceStep": "\/api\/3\/workflow_steps\/ef991765-8e13-41e3-bb3d-611b820041b9",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e7cf531e-197c-419e-bcd5-db1e1912858c"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Create Yara Rule Record -> Create Sigma Rule Record",
+            "targetStep": "\/api\/3\/workflow_steps\/ef991765-8e13-41e3-bb3d-611b820041b9",
+            "sourceStep": "\/api\/3\/workflow_steps\/37e7c751-9959-4e87-8b0f-aa535c61a67a",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "54124ae2-cf83-4441-9147-bc4bfa3edf77"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Download Sigma Rule -> StartaS",
+            "targetStep": "\/api\/3\/workflow_steps\/68708e2a-1426-41d9-8cbe-6bb5c56ad70e",
+            "sourceStep": "\/api\/3\/workflow_steps\/d4ee7fbe-2e77-4646-a4c6-52ea5c687382",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "e68740f7-5c30-4d70-9946-b48b06993d78"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Fortinet Fabric Queries -> Create Fortinet Fabric Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/210941fd-d96b-42f5-9ee6-2e67915e47db",
+            "sourceStep": "\/api\/3\/workflow_steps\/c374cd76-9f2c-4ffd-be61-1f741cac0687",
+            "label": "Upload",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f34253a5-230d-44e5-b846-ad7cbc492347"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Get Yara Rule -> Download Sigma Rule",
+            "targetStep": "\/api\/3\/workflow_steps\/d4ee7fbe-2e77-4646-a4c6-52ea5c687382",
+            "sourceStep": "\/api\/3\/workflow_steps\/27cba674-81ef-467c-ae52-9d7fa8e351d7",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "2ab1bceb-f190-4cec-a279-7096294764ef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Start -> Configuration",
+            "targetStep": "\/api\/3\/workflow_steps\/999f24fc-27db-455e-be1b-991d2f5bbcdb",
+            "sourceStep": "\/api\/3\/workflow_steps\/b78a2f95-04de-401a-b6bb-9734d90a6e43",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "f13ad0c2-dca6-4f9f-a4d8-df6fedca8a86"
+        }
+    ],
+    "groups": [],
+    "priority": "\/api\/3\/picklists\/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+    "uuid": "b14b54ce-f0a2-42bc-aa35-bd0983c536d6",
+    "owners": [],
+    "isPrivate": false,
+    "deletedAt": null,
+    "recordTags": [
+        "ManualTrigger",
+        "Outbreak Alert"
+    ]
+}
