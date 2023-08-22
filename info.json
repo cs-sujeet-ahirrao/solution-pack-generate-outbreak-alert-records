@@ -100,7 +100,7 @@
         ],
         "playbooks": [
             {
-                "name": "02 - Generate Outbreak Alert Records"
+                "name": "10 - Internal SP - Generate Outbreak Alert Records"
             }
         ],
         "globalVariables": [],

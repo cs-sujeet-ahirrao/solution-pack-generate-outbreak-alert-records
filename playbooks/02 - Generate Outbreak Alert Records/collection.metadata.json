@@ -1,7 +1,7 @@
 {
     "@context": "\/api\/3\/contexts\/WorkflowCollection",
     "@type": "WorkflowCollection",
-    "name": "02 - Generate Outbreak Alert Records",
+    "name": "10 - Internal SP - Generate Outbreak Alert Records",
     "description": null,
     "visible": true,
     "image": null,
