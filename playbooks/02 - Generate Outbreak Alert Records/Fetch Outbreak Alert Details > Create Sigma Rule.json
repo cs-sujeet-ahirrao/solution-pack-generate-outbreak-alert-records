@@ -29,7 +29,7 @@
                 "splunk_hunt_query": "{{vars.input.params['rule_details'].splunk_hunt_query}}",
                 "arcSight_hunt_query": "{{vars.input.params['rule_details'].arcSight_hunt_query}}",
                 "elasticSearch_hunt_query": "{{vars.input.params['rule_details'].elasticSearch_hunt_query}}",
-                "microsoftSentinel_hunt_query": "{{vars.input.params['rule_details'].microsoftSentinel_hunt_query}}"
+                "azureLogAnalytics_hunt_query": "{{vars.input.params['rule_details'].azureLogAnalytics_hunt_query}}"
             },
             "status": null,
             "top": "165",
@@ -55,7 +55,7 @@
                     "recordTags": "{{\"Outbreak Alert\"}},{{vars.input.records[0].recordTags | join(\",\")}}",
                     "elasticSearch": "{{vars.elasticSearch_hunt_query}}",
                     "outbreakAlerts": "{{vars.input.records[0]['@id']}}",
-                    "microsoftSentinel": "{{vars.microsoftSentinel_hunt_query}}"
+                    "azureLogAnalytics": "{{vars.azureLogAnalytics_hunt_query}}"
                 },
                 "operation": "Overwrite",
                 "collection": "\/api\/3\/upsert\/threat_hunt_rules",

@@ -20,7 +20,7 @@
             "name": "Compute Sigma Rules",
             "description": null,
             "arguments": {
-                "sigma_rule": "{% set sr = [] %}{% for item in vars.steps.Download_Sigma_Rule %}{% set _ = sr.append({\"rule\": item.sigma_rule, \"splunk_hunt_query\": item.splunk_hunt_query, \"QRadar_hunt_query\": item.QRadar_hunt_query, \"arcSight_hunt_query\": item.arcSight_hunt_query, \"elasticSearch_hunt_query\": item.elasticSearch_hunt_query, \"microsoftSentinel_hunt_query\": item.microsoftSentinel_hunt_query, \"url\": vars.sigma_rule_list[loop.index0] }) %}{% endfor %}{{sr}}",
+                "sigma_rule": "{% set sr = [] %}{% for item in vars.steps.Download_Sigma_Rule %}{% set _ = sr.append({\"rule\": item.sigma_rule, \"splunk_hunt_query\": item.splunk_hunt_query, \"QRadar_hunt_query\": item.QRadar_hunt_query, \"arcSight_hunt_query\": item.arcSight_hunt_query, \"elasticSearch_hunt_query\": item.elasticSearch_hunt_query, \"azureLogAnalytics_hunt_query\": item.azureLogAnalytics_hunt_query, \"url\": vars.sigma_rule_list[loop.index0] }) %}{% endfor %}{{sr}}",
                 "yara_rules": "{% set rl = [] %}{% for item in vars.steps.Get_Yara_Rule %}{% set _ = rl.append({\"data\": item.data, \"url\": vars.yara_rule_list[loop.index0]}) %}{%\n endfor %}{{rl}}"
             },
             "status": null,
@@ -202,7 +202,7 @@
                                 "tooltip": "Provide the rule Event Type and Event Severity Category",
                                 "dataType": "object",
                                 "formType": "object",
-                                "required": true,
+                                "required": false,
                                 "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,
@@ -225,7 +225,7 @@
                                 "tooltip": "Provide the ADOM and event filter details",
                                 "dataType": "object",
                                 "formType": "object",
-                                "required": true,
+                                "required": false,
                                 "_expanded": true,
                                 "mmdUpdate": true,
                                 "collection": false,

@@ -42,7 +42,7 @@
                     "subTitle": "{{vars.source_data[0].sub_title}}",
                     "__replace": "",
                     "background": "{{vars.source_data[0].background}}",
-                    "iOCCSVFile": "{{vars.input.params.uploadIOCCSVFile['@id']}}",
+                    "iOCCSVFile": "{{vars.input.params.uploadIOCCSVFilepath}}",
                     "recordTags": "{{\"Outbreak Alert\"}},{{vars.source_data[0].tag}}",
                     "sourceData": "{{vars.source_data}}",
                     "description": "{{vars.source_data[0].description}}",
@@ -129,28 +129,26 @@
                         "useRecordFieldDefault": false
                     },
                     {
-                        "name": "uploadIOCCSVFile",
+                        "name": "uploadIOCCSVFilepath",
                         "type": "string",
-                        "label": "Upload IOC CSV File",
-                        "title": "File Field",
+                        "label": "Upload IOC CSV Filepath",
+                        "title": "URL",
                         "usable": true,
                         "tooltip": "",
-                        "dataType": "file",
-                        "formType": "file",
+                        "dataType": "text",
+                        "formType": "url",
                         "required": false,
                         "_expanded": true,
                         "mmdUpdate": true,
                         "collection": false,
-                        "dataSource": {
-                            "model": "files"
-                        },
-                        "searchable": false,
-                        "templateUrl": "app\/components\/form\/fields\/file.html",
+                        "dataSource": [],
+                        "searchable": true,
+                        "templateUrl": "app\/components\/form\/fields\/url.html",
                         "defaultValue": null,
-                        "_previousName": "uploadIOCCSV",
+                        "_previousName": "uploadIOCCSVFilepath",
                         "playbookField": true,
-                        "lengthConstraint": true,
-                        "allowedEncryption": false,
+                        "lengthConstraint": false,
+                        "allowedEncryption": true,
                         "allowedGridColumn": true,
                         "jinjaExpressionView": true,
                         "useRecordFieldDefault": false
@@ -159,7 +157,7 @@
                 "step_variables": {
                     "input": {
                         "params": {
-                            "uploadIOCCSVFile": "{{vars.request.data[\"uploadIOCCSVFile\"]}}",
+                            "uploadIOCCSVFilepath": "{{vars.request.data[\"uploadIOCCSVFilepath\"]}}",
                             "uploadFortiGuardOutbreakAlertJSONFile": "{{vars.request.data[\"uploadFortiGuardOutbreakAlertJSONFile\"]}}"
                         },
                         "records": "{{vars.input.records}}"
