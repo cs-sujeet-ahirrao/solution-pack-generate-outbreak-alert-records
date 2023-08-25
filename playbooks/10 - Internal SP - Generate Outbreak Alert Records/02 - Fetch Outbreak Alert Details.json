@@ -17,6 +17,30 @@
     "steps": [
         {
             "@type": "WorkflowStep",
+            "name": "Add Mitigation Measures",
+            "description": null,
+            "arguments": {
+                "resource": {
+                    "mitigation": "{{vars.steps.Mitigation_Measures.input.mitigationSteps}}"
+                },
+                "operation": "Append",
+                "collection": "{{vars.input.records[0]['@id']}}",
+                "__recommend": [],
+                "collectionType": "\/api\/3\/outbreak_alerts",
+                "fieldOperation": {
+                    "recordTags": "Append"
+                },
+                "step_variables": []
+            },
+            "status": null,
+            "top": "1515",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/b593663d-7d13-40ce-a3a3-96dece928722",
+            "group": null,
+            "uuid": "a2d479cf-658c-4fc5-8d30-fe6cc515554b"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Compute Sigma Rules",
             "description": null,
             "arguments": {
@@ -311,6 +335,76 @@
         },
         {
             "@type": "WorkflowStep",
+            "name": "Mitigation Measures",
+            "description": null,
+            "arguments": {
+                "type": "InputBased",
+                "input": {
+                    "schema": {
+                        "title": "Mitigation Measures",
+                        "description": "Provide the strongly recommend mitigation measures to help prevent successful exploitation of the {{vars.input.records[0].title}}{{vars.input.records[0].title}}",
+                        "inputVariables": [
+                            {
+                                "name": "mitigationSteps",
+                                "type": "string",
+                                "label": "Mitigation Steps",
+                                "title": "Text Area",
+                                "usable": false,
+                                "tooltip": "",
+                                "dataType": "text",
+                                "formType": "textarea",
+                                "required": false,
+                                "_expanded": true,
+                                "mmdUpdate": false,
+                                "collection": false,
+                                "searchable": false,
+                                "templateUrl": "app\/components\/form\/fields\/json.html",
+                                "defaultValue": "<p>Progress has discovered a vulnerability in MOVEit Transfer that could lead to escalated privileges and potential unauthorized access to the environment.  It is extremely important that you  <a href=\"https:\/\/community.progress.com\/s\/article\/MOVEit-Transfer-Critical-Vulnerability-31May2023\" target=\"_blank\">take immediate action<\/a> in order to help protect your MOVEit Transfer environment.<\/p>",
+                                "_previousName": "mitigationSteps",
+                                "playbookField": true,
+                                "lengthConstraint": false,
+                                "allowedGridColumn": false,
+                                "jinjaExpressionView": true,
+                                "useRecordFieldDefault": false
+                            }
+                        ]
+                    }
+                },
+                "record": "{{ vars.input.records[0][\"@id\"] }}",
+                "agent_id": null,
+                "resources": "outbreak_alerts",
+                "owner_detail": {
+                    "isAssigned": false
+                },
+                "isRecordLinked": true,
+                "step_variables": [],
+                "response_mapping": {
+                    "options": [
+                        {
+                            "option": "Submit",
+                            "primary": true,
+                            "step_iri": "\/api\/3\/workflow_steps\/a2d479cf-658c-4fc5-8d30-fe6cc515554b"
+                        }
+                    ],
+                    "duplicateOption": false
+                },
+                "email_notification": {
+                    "enabled": false,
+                    "smtpParameters": []
+                },
+                "inline_channel_list": [],
+                "external_channel_list": [],
+                "unauthenticated_input": false
+            },
+            "status": null,
+            "top": "1380",
+            "left": "125",
+            "stepType": "\/api\/3\/workflow_step_types\/fc04082a-d7dc-4299-96fb-6837b1baa0fe",
+            "group": null,
+            "uuid": "910fa4e6-e030-4521-a992-b892b22858ea"
+        },
+        {
+            "@type": "WorkflowStep",
             "name": "Start",
             "description": null,
             "arguments": {
@@ -374,6 +468,16 @@
         },
         {
             "@type": "WorkflowRoute",
+            "name": "Create FortiAnalyzer Rule -> Mitigation Measures",
+            "targetStep": "\/api\/3\/workflow_steps\/910fa4e6-e030-4521-a992-b892b22858ea",
+            "sourceStep": "\/api\/3\/workflow_steps\/88a1b4b4-506a-410a-9a76-76d3464a36fa",
+            "label": null,
+            "isExecuted": false,
+            "group": null,
+            "uuid": "d37ed525-e14d-4ddd-8491-1f1a02138a46"
+        },
+        {
+            "@type": "WorkflowRoute",
             "name": "Create FortiSIEM Rule -> Copy of Create FortiSIEM Rule",
             "targetStep": "\/api\/3\/workflow_steps\/88a1b4b4-506a-410a-9a76-76d3464a36fa",
             "sourceStep": "\/api\/3\/workflow_steps\/210941fd-d96b-42f5-9ee6-2e67915e47db",
@@ -431,6 +535,16 @@
             "isExecuted": false,
             "group": null,
             "uuid": "2ab1bceb-f190-4cec-a279-7096294764ef"
+        },
+        {
+            "@type": "WorkflowRoute",
+            "name": "Mitigation Measures -> Add Mitigation Measures",
+            "targetStep": "\/api\/3\/workflow_steps\/a2d479cf-658c-4fc5-8d30-fe6cc515554b",
+            "sourceStep": "\/api\/3\/workflow_steps\/910fa4e6-e030-4521-a992-b892b22858ea",
+            "label": "Submit",
+            "isExecuted": false,
+            "group": null,
+            "uuid": "695bb7df-1939-4e4f-8c9f-76564d0e393e"
         },
         {
             "@type": "WorkflowRoute",
