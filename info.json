@@ -49,6 +49,12 @@
             },
             {
                 "name": "Rule Type"
+            },
+            {
+                "name": "Threat Hunt Tools"
+            },
+            {
+                "name": "Ticketing Tools"
             }
         ],
         "modules": {
@@ -109,6 +115,42 @@
             {
                 "name": "File Content Extraction",
                 "apiName": "file-content-extraction"
+            },
+            {
+                "name": "Azure Log Analytics",
+                "apiName": "azure-log-analytics"
+            },
+            {
+                "name": "Fortinet FortiAnalyzer",
+                "apiName": "fortinet-fortianalyzer"
+            },
+            {
+                "name": "Fortinet FortiGate",
+                "apiName": "fortigate-firewall"
+            },
+            {
+                "name": "Fortinet FortiSIEM",
+                "apiName": "fortinet-fortisiem"
+            },
+            {
+                "name": "IBM QRadar",
+                "apiName": "qradar"
+            },
+            {
+                "name": "Jira",
+                "apiName": "jira"
+            },
+            {
+                "name": "NIST National Vulnerability Database",
+                "apiName": "nist-nvd"
+            },
+            {
+                "name": "ServiceNow",
+                "apiName": "servicenow"
+            },
+            {
+                "name": "Splunk",
+                "apiName": "splunk"
             }
         ]
     }
